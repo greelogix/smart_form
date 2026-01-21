@@ -1,9 +1,10 @@
 ## 0.0.1
 
-* Initial release of SmartForm.
-* Comprehensive state management with `SmartFormController`.
-* Support for Material, Cupertino, and Adaptive styles.
-* Built-in fields: Text, Password, Email, Number, Toggle, Choice, and Searchable Dropdown.
-* Support for custom fields via `SmartCustomField`.
-* Professional `FieldDecoration` with prefix/suffix support.
-* Unified `onChanged` and `onSubmit` callbacks.
+* Initial release of SmartForm Toolkit.
+* **SmartFormBuilder**: New feature to generate forms completely from a JSON schema.
+* **Unified State Management**: Centralized form state via `SmartFormController`.
+* **Platform-Aware Fields**: Automatic adaptation between Material and Cupertino.
+* **Advanced Parity**: Full feature parity for `SmartTextField` with native Flutter widgets.
+* **Rich Styling**: Global and per-field customization via `FieldDecoration` and `SmartStyle`.
+* **Generic Choice Fields**: Supports `Switch`, `Checkbox`, `Radio`, and `Segmented` layouts.
+* **Searchable Dropdowns**: Asynchronous searching with debouncing support.

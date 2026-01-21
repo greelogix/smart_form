@@ -1,4 +1,4 @@
-name: smart_form_builder
+name: smart_form_toolkit
 description: "An advanced, platform-aware Flutter form framework with unified state management, generic type support, and deep native parity."
 version: 0.0.1
 homepage: https://github.com/greelogix/smart_form

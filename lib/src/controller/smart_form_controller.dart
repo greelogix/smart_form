@@ -24,11 +24,11 @@ class SmartFormController extends ChangeNotifier {
   bool get isDirty => _dirty.isNotEmpty;
 
   /// Sets the value for a specific field by its [name].
-  void setValue(String name, dynamic value) {
+  void setValue(String name, dynamic value, {bool notify = true}) {
     if (_values[name] != value) {
       _values[name] = value;
       _dirty[name] = true;
-      notifyListeners();
+      if (notify) notifyListeners();
     }
   }
 

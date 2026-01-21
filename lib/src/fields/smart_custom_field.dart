@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
-import 'package:smart_form_builder/src/controller/smart_form_controller.dart';
-import 'package:smart_form_builder/src/smart_form.dart';
+import 'package:smart_form_toolkit/src/controller/smart_form_controller.dart';
+import 'package:smart_form_toolkit/src/smart_form.dart';
 
 /// A widget that allows developers to create completely custom form fields.
 /// 

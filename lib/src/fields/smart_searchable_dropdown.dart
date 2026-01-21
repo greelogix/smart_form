@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:smart_form_builder/src/controller/smart_form_controller.dart';
-import 'package:smart_form_builder/src/models/field_decoration.dart';
-import 'package:smart_form_builder/src/models/smart_style.dart';
-import 'package:smart_form_builder/src/smart_form.dart';
+import 'package:smart_form_toolkit/src/controller/smart_form_controller.dart';
+import 'package:smart_form_toolkit/src/models/field_decoration.dart';
+import 'package:smart_form_toolkit/src/models/smart_style.dart';
+import 'package:smart_form_toolkit/src/smart_form.dart';
 
 /// A dropdown menu that supports dynamic, asynchronous searching.
 /// 

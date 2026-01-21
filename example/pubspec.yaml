@@ -11,7 +11,7 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.8
-  smart_form:
+  smart_form_toolkit:
     path: ..
 
 dev_dependencies:
