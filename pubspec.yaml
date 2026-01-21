@@ -1,0 +1,29 @@
+name: smart_form
+description: "An advanced, platform-aware Flutter form framework with unified state management, generic type support, and deep native parity."
+version: 0.0.1
+homepage: https://github.com/greelogix/smart_form
+repository: https://github.com/greelogix/smart_form.git
+issue_tracker: https://github.com/greelogix/smart_form/issues
+
+environment:
+  sdk: '>=3.10.7 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+topics:
+  - form
+  - validation
+  - adaptive
+  - components
+  - ui
+
+flutter:
+  uses-material-design: true
