@@ -2,10 +2,10 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:smart_form/src/controller/smart_form_controller.dart';
-import 'package:smart_form/src/models/field_decoration.dart';
-import 'package:smart_form/src/models/smart_style.dart';
-import 'package:smart_form/src/smart_form.dart';
+import 'package:smart_form_builder/src/controller/smart_form_controller.dart';
+import 'package:smart_form_builder/src/models/field_decoration.dart';
+import 'package:smart_form_builder/src/models/smart_style.dart';
+import 'package:smart_form_builder/src/smart_form.dart';
 
 /// A versatile text input widget that integrates with [SmartFormController].
 /// 

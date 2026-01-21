@@ -1,14 +1,14 @@
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-import 'package:smart_form/src/controller/smart_form_controller.dart';
-import 'package:smart_form/src/fields/smart_custom_field.dart';
-import 'package:smart_form/src/fields/smart_text_field.dart';
-import 'package:smart_form/src/fields/smart_toggle_field.dart';
-import 'package:smart_form/src/fields/smart_choice_field.dart';
-import 'package:smart_form/src/fields/smart_searchable_dropdown.dart';
-import 'package:smart_form/src/models/field_decoration.dart';
-import 'package:smart_form/src/models/choice_option.dart';
-import 'package:smart_form/src/models/smart_style.dart';
+import 'package:smart_form_builder/src/controller/smart_form_controller.dart';
+import 'package:smart_form_builder/src/fields/smart_custom_field.dart';
+import 'package:smart_form_builder/src/fields/smart_text_field.dart';
+import 'package:smart_form_builder/src/fields/smart_toggle_field.dart';
+import 'package:smart_form_builder/src/fields/smart_choice_field.dart';
+import 'package:smart_form_builder/src/fields/smart_searchable_dropdown.dart';
+import 'package:smart_form_builder/src/models/field_decoration.dart';
+import 'package:smart_form_builder/src/models/choice_option.dart';
+import 'package:smart_form_builder/src/models/smart_style.dart';
 
 /// A static factory class for creating various [SmartForm] fields with a clean API.
 class SmartField {

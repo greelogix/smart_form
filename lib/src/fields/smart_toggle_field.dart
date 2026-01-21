@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:smart_form/src/controller/smart_form_controller.dart';
-import 'package:smart_form/src/models/smart_style.dart';
-import 'package:smart_form/src/smart_form.dart';
+import 'package:smart_form_builder/src/controller/smart_form_controller.dart';
+import 'package:smart_form_builder/src/models/smart_style.dart';
+import 'package:smart_form_builder/src/smart_form.dart';
 
 /// The type of toggle widget to display.
 enum ToggleType {

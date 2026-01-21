@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:smart_form/smart_form.dart';
+import 'package:smart_form_builder/smart_form_builder.dart';
 
 void main() {
   runApp(const MyApp());
