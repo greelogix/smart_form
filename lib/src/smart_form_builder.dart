@@ -3,7 +3,9 @@ import 'package:smart_form_toolkit/smart_form_toolkit.dart';
 
 /// A widget that builds a [SmartForm] automatically from a JSON-like schema.
 /// 
-/// The [schema] is a list of maps where each map defines a field's properties.
+/// **Important**: For this builder to function correctly, the [schema] provided must
+/// align exactly with the expected field definitions (keys like 'type', 'name', 'validation', etc.).
+/// Effortless form generation depends on this alignment with the package's internal mapping.
 class SmartFormBuilder extends StatelessWidget {
   /// The JSON-like list of field definitions.
   final List<Map<String, dynamic>> schema;

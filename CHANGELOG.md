@@ -1,3 +1,8 @@
+## 0.0.2
+
+* Enhanced documentation for `SmartFormBuilder`.
+* Clarified JSON schema alignment requirements in README and code.
+
 ## 0.0.1
 
 * Initial release of SmartForm Toolkit.
