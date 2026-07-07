@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:smart_form_toolkit/src/controller/smart_form_controller.dart';
@@ -43,15 +44,19 @@ class SmartChoiceField<T extends Object> extends StatefulWidget {
   /// Triggered whenever the selected value changes.
   final ValueChanged<T?>? onChanged;
 
+  /// A function for validating the selected value.
+  final FutureOr<String?> Function(dynamic)? validator;
+
   /// Creates a [SmartChoiceField].
   const SmartChoiceField({
     super.key,
     required this.name,
     required this.options,
     this.label,
-    this.layout = ChoiceLayout.row,
+    this.layout = ChoiceLayout.wrap,
     this.style,
     this.onChanged,
+    this.validator,
   });
 
   @override
@@ -62,6 +67,7 @@ class _SmartChoiceFieldState<T extends Object>
     extends State<SmartChoiceField<T>> {
   SmartFormController? _controller;
   T? _selectedValue;
+  String? _errorText;
 
   @override
   void didChangeDependencies() {
@@ -69,15 +75,20 @@ class _SmartChoiceFieldState<T extends Object>
     final provider = SmartFormProvider.of(context);
     if (provider != null) {
       if (_controller != provider.controller) {
+        _controller?.unregisterField(widget.name);
+        _controller?.removeListener(_handleControllerChange);
         _controller = provider.controller;
+        _controller!.registerField(widget.name, validator: widget.validator);
         _controller!.addListener(_handleControllerChange);
         _selectedValue = _controller!.getValue(widget.name);
+        _errorText = _controller!.getError(widget.name);
       }
     }
   }
 
   @override
   void dispose() {
+    _controller?.unregisterField(widget.name);
     _controller?.removeListener(_handleControllerChange);
     super.dispose();
   }
@@ -85,20 +96,26 @@ class _SmartChoiceFieldState<T extends Object>
   void _handleControllerChange() {
     if (_controller != null) {
       final val = _controller!.getValue(widget.name);
-      if (val != _selectedValue) {
+      final err = _controller!.getError(widget.name);
+      if (val != _selectedValue || err != _errorText) {
         setState(() {
           _selectedValue = val;
+          _errorText = err;
         });
       }
     }
   }
 
-  void _onChanged(T? value) {
+  Future<void> _onChanged(T? value) async {
     if (value == _selectedValue) return;
     setState(() {
       _selectedValue = value;
     });
     _controller?.setValue(widget.name, value);
+    if (widget.validator != null) {
+      final error = await widget.validator!(value);
+      _controller?.setError(widget.name, error);
+    }
     widget.onChanged?.call(value);
   }
 
@@ -155,6 +172,17 @@ class _SmartChoiceFieldState<T extends Object>
               },
             ),
           ),
+          if (_errorText != null)
+            Padding(
+              padding: const EdgeInsets.only(top: 4.0),
+              child: Text(
+                _errorText!,
+                style: const TextStyle(
+                  color: CupertinoColors.systemRed,
+                  fontSize: 12,
+                ),
+              ),
+            ),
         ],
       );
     }
@@ -237,6 +265,17 @@ class _SmartChoiceFieldState<T extends Object>
             ),
           ),
         content,
+        if (_errorText != null)
+          Padding(
+            padding: const EdgeInsets.only(top: 4.0),
+            child: Text(
+              _errorText!,
+              style: const TextStyle(
+                color: Colors.red,
+                fontSize: 12,
+              ),
+            ),
+          ),
       ],
     );
   }

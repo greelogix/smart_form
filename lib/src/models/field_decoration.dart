@@ -56,4 +56,35 @@ class FieldDecoration {
     this.labelStyle,
     this.hintStyle,
   });
+
+  /// Creates a copy of this [FieldDecoration] with the given fields replaced.
+  FieldDecoration copyWith({
+    double? borderRadius,
+    EdgeInsetsGeometry? padding,
+    Color? fillColor,
+    Color? borderColor,
+    double? borderWidth,
+    List<BoxShadow>? shadows,
+    Widget? prefix,
+    Widget? prefixIcon,
+    Widget? suffix,
+    Widget? suffixIcon,
+    TextStyle? labelStyle,
+    TextStyle? hintStyle,
+  }) {
+    return FieldDecoration(
+      borderRadius: borderRadius ?? this.borderRadius,
+      padding: padding ?? this.padding,
+      fillColor: fillColor ?? this.fillColor,
+      borderColor: borderColor ?? this.borderColor,
+      borderWidth: borderWidth ?? this.borderWidth,
+      shadows: shadows ?? this.shadows,
+      prefix: prefix ?? this.prefix,
+      prefixIcon: prefixIcon ?? this.prefixIcon,
+      suffix: suffix ?? this.suffix,
+      suffixIcon: suffixIcon ?? this.suffixIcon,
+      labelStyle: labelStyle ?? this.labelStyle,
+      hintStyle: hintStyle ?? this.hintStyle,
+    );
+  }
 }

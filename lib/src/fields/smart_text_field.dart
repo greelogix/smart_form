@@ -24,6 +24,9 @@ class SmartTextField extends StatefulWidget {
   /// Whether to hide the text being entered (e.g., for passwords).
   final bool obscureText;
 
+  /// Whether to show a toggle button for password visibility.
+  final bool enablePasswordToggle;
+
   /// The type of keyboard to display.
   final TextInputType? keyboardType;
 
@@ -103,6 +106,7 @@ class SmartTextField extends StatefulWidget {
     this.label,
     this.hint,
     this.obscureText = false,
+    this.enablePasswordToggle = false,
     this.keyboardType,
     this.maxLines = 1,
     this.minLines,
@@ -140,10 +144,12 @@ class _SmartTextFieldState extends State<SmartTextField> {
   String? _errorText;
   late FocusNode _focusNode;
   bool _isAsyncValidating = false;
+  late bool _obscureText;
 
   @override
   void initState() {
     super.initState();
+    _obscureText = widget.obscureText;
     _focusNode = widget.externalFocusNode ?? FocusNode();
     _focusNode.addListener(_onFocusChange);
     _textController = widget.externalController ?? TextEditingController();
@@ -155,7 +161,16 @@ class _SmartTextFieldState extends State<SmartTextField> {
     final provider = SmartFormProvider.of(context);
     if (provider != null) {
       if (_controller != provider.controller) {
+        _controller?.unregisterField(widget.name);
+        _controller?.removeListener(_handleControllerChange);
         _controller = provider.controller;
+        if (widget.validator != null) {
+          _controller!.registerField(widget.name, validator: (value) {
+            return widget.validator!(value?.toString());
+          });
+        } else {
+          _controller!.registerField(widget.name);
+        }
         _controller!.addListener(_handleControllerChange);
         
         // Initialize value from controller if exists and not using external controller
@@ -171,6 +186,7 @@ class _SmartTextFieldState extends State<SmartTextField> {
   void dispose() {
     _focusNode.removeListener(_onFocusChange);
     if (widget.externalFocusNode == null) _focusNode.dispose();
+    _controller?.unregisterField(widget.name);
     _controller?.removeListener(_handleControllerChange);
     if (widget.externalController == null) _textController.dispose();
     _debounceTimer?.cancel();
@@ -232,8 +248,30 @@ class _SmartTextFieldState extends State<SmartTextField> {
     final bool useCupertino = effectiveStyle == SmartStyle.cupertino || 
         (effectiveStyle == SmartStyle.adaptive && (platform == TargetPlatform.iOS || platform == TargetPlatform.macOS));
 
+    Widget buildPasswordToggle() {
+      if (widget.obscureText && widget.enablePasswordToggle) {
+        return GestureDetector(
+          onTap: () {
+            setState(() {
+              _obscureText = !_obscureText;
+            });
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(8),
+            child: Icon(
+              useCupertino 
+                  ? (_obscureText ? CupertinoIcons.eye_slash : CupertinoIcons.eye)
+                  : (_obscureText ? Icons.visibility_off : Icons.visibility),
+            ),
+          ),
+        );
+      }
+      return const SizedBox.shrink();
+    }
+
     Widget field;
     if (useCupertino) {
+      final passwordToggle = buildPasswordToggle();
       field = Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -249,7 +287,7 @@ class _SmartTextFieldState extends State<SmartTextField> {
               focusNode: _focusNode,
               placeholder: widget.hint,
               placeholderStyle: widget.decoration?.hintStyle,
-              obscureText: widget.obscureText,
+              obscureText: _obscureText,
               keyboardType: widget.keyboardType,
               maxLines: widget.maxLines,
               minLines: widget.minLines,
@@ -263,8 +301,19 @@ class _SmartTextFieldState extends State<SmartTextField> {
               textAlign: widget.textAlign,
               style: widget.textStyle,
               textInputAction: widget.textInputAction,
-              prefix: widget.decoration?.prefixIcon ?? widget.decoration?.prefix,
-              suffix: widget.decoration?.suffixIcon ?? widget.decoration?.suffix ?? (_isAsyncValidating ? const Padding(padding: EdgeInsets.all(8), child: CupertinoActivityIndicator(radius: 8)) : null),
+              prefix: widget.decoration?.prefix ??
+                      (widget.decoration?.prefixIcon != null
+                          ? Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 12),
+                              child: widget.decoration!.prefixIcon,
+                            )
+                          : null),
+              suffix: widget.decoration?.suffix ??
+                      widget.decoration?.suffixIcon ?? 
+                      (passwordToggle is SizedBox ? 
+                        (_isAsyncValidating ? const Padding(padding: EdgeInsets.all(8), child: CupertinoActivityIndicator(radius: 8)) : null) 
+                        : passwordToggle) ?? 
+                      (_isAsyncValidating ? const Padding(padding: EdgeInsets.all(8), child: CupertinoActivityIndicator(radius: 8)) : null),
               padding: widget.decoration?.padding ?? const EdgeInsets.all(12),
               decoration: BoxDecoration(
                 color: widget.decoration?.fillColor ?? CupertinoColors.white,
@@ -285,15 +334,25 @@ class _SmartTextFieldState extends State<SmartTextField> {
         ],
       );
     } else {
+      final passwordToggle = buildPasswordToggle();
       InputDecoration decoration = InputDecoration(
         labelText: widget.label,
         labelStyle: widget.decoration?.labelStyle,
         hintText: widget.hint,
         hintStyle: widget.decoration?.hintStyle,
         prefix: widget.decoration?.prefix,
-        prefixIcon: widget.decoration?.prefixIcon,
+        prefixIcon: widget.decoration?.prefixIcon != null
+            ? Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: widget.decoration!.prefixIcon,
+              )
+            : null,
         suffix: widget.decoration?.suffix,
-        suffixIcon: widget.decoration?.suffixIcon ?? (_isAsyncValidating ? const Padding(padding: EdgeInsets.all(12), child: SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2))) : null),
+        suffixIcon: widget.decoration?.suffixIcon ?? 
+                     (passwordToggle is SizedBox ? 
+                       (_isAsyncValidating ? const Padding(padding: EdgeInsets.all(12), child: SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2)) : null) 
+                       : passwordToggle) ?? 
+                     (_isAsyncValidating ? const Padding(padding: EdgeInsets.all(12), child: SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2)) : null),
         errorText: _errorText,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(widget.decoration?.borderRadius ?? 4.0),
@@ -321,7 +380,7 @@ class _SmartTextFieldState extends State<SmartTextField> {
             controller: _textController,
             focusNode: _focusNode,
             decoration: decoration,
-            obscureText: widget.obscureText,
+            obscureText: _obscureText,
             keyboardType: widget.keyboardType,
             maxLines: widget.maxLines,
             minLines: widget.minLines,
@@ -344,7 +403,7 @@ class _SmartTextFieldState extends State<SmartTextField> {
             controller: _textController,
             focusNode: _focusNode,
             decoration: decoration,
-            obscureText: widget.obscureText,
+            obscureText: _obscureText,
             keyboardType: widget.keyboardType,
             maxLines: widget.maxLines,
             minLines: widget.minLines,

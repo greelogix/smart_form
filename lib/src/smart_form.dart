@@ -89,13 +89,16 @@ class _SmartFormState extends State<SmartForm> {
     super.dispose();
   }
 
-  void _handleSystemSubmit() {
-    if (widget.controller.isValid) {
+  Future<void> _handleSystemSubmit() async {
+    final isValid = await widget.controller.validate();
+    if (isValid) {
       widget.onSubmit?.call(widget.controller.values);
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please fix errors before submitting')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please fix errors before submitting')),
+        );
+      }
     }
   }
 

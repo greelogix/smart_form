@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:smart_form_toolkit/src/controller/smart_form_controller.dart';
@@ -39,11 +40,16 @@ class SmartField {
     VoidCallback? onEditingComplete,
     FocusNode? focusNode,
     TextEditingController? controller,
+    bool obscureText = false,
+    bool enablePasswordToggle = false,
+    FutureOr<String?> Function(String?)? validator,
   }) {
     return SmartTextField(
       name: name,
       label: label,
       hint: hint,
+      obscureText: obscureText,
+      enablePasswordToggle: enablePasswordToggle,
       maxLines: maxLines,
       minLines: minLines,
       height: height,
@@ -61,6 +67,7 @@ class SmartField {
       onChanged: onChanged,
       onSubmitted: onSubmitted,
       onEditingComplete: onEditingComplete,
+      validator: validator,
       externalFocusNode: focusNode,
       externalController: controller,
     );
@@ -84,12 +91,15 @@ class SmartField {
     ValueChanged<String>? onChanged,
     ValueChanged<String>? onSubmitted,
     FocusNode? focusNode,
+    bool enablePasswordToggle = true,
+    FutureOr<String?> Function(String?)? validator,
   }) {
     return SmartTextField(
       name: name,
       label: label,
       hint: hint,
       obscureText: true,
+      enablePasswordToggle: enablePasswordToggle,
       maxLines: 1,
       height: height,
       width: width,
@@ -103,6 +113,7 @@ class SmartField {
       textInputAction: textInputAction,
       onChanged: onChanged,
       onSubmitted: onSubmitted,
+      validator: validator,
       externalFocusNode: focusNode,
     );
   }
@@ -120,6 +131,7 @@ class SmartField {
     bool enabled = true,
     ValueChanged<String>? onChanged,
     List<TextInputFormatter>? inputFormatters,
+    FutureOr<String?> Function(String?)? validator,
   }) {
     return SmartTextField(
       name: name,
@@ -134,6 +146,7 @@ class SmartField {
       enabled: enabled,
       onChanged: onChanged,
       inputFormatters: inputFormatters,
+      validator: validator,
     );
   }
 
@@ -148,6 +161,7 @@ class SmartField {
     SmartStyle? style,
     bool useFormField = true,
     ValueChanged<String>? onChanged,
+    FutureOr<String?> Function(String?)? validator,
   }) {
     return SmartTextField(
       name: name,
@@ -160,6 +174,7 @@ class SmartField {
       style: style,
       useFormField: useFormField,
       onChanged: onChanged,
+      validator: validator,
     );
   }
 
@@ -176,6 +191,7 @@ class SmartField {
     SmartStyle? style,
     bool useFormField = true,
     ValueChanged<String>? onChanged,
+    FutureOr<String?> Function(String?)? validator,
   }) {
     return SmartTextField(
       name: name,
@@ -190,6 +206,7 @@ class SmartField {
       style: style,
       useFormField: useFormField,
       onChanged: onChanged,
+      validator: validator,
     );
   }
 
@@ -257,9 +274,10 @@ class SmartField {
     required String name,
     required List<ChoiceOption<T>> options,
     String? label,
-    ChoiceLayout layout = ChoiceLayout.row,
+    ChoiceLayout layout = ChoiceLayout.wrap,
     SmartStyle? style,
     ValueChanged<T?>? onChanged,
+    FutureOr<String?> Function(dynamic)? validator,
   }) {
     return SmartChoiceField<T>(
       name: name,
@@ -268,6 +286,7 @@ class SmartField {
       layout: layout,
       style: style,
       onChanged: onChanged,
+      validator: validator,
     );
   }
 

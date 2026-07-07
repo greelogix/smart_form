@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/foundation.dart';
 
 /// A controller that manages the state of a [SmartForm].
@@ -8,6 +9,8 @@ class SmartFormController extends ChangeNotifier {
   final Map<String, String?> _errors = {};
   final Map<String, bool> _dirty = {};
   final Map<String, bool> _touched = {};
+  final Map<String, FutureOr<String?> Function(dynamic)?> _validators = {};
+  final Set<String> _registeredFields = {};
   
   VoidCallback? _onSubmitCallback;
 
@@ -22,6 +25,24 @@ class SmartFormController extends ChangeNotifier {
 
   /// Returns `true` if any field has been modified.
   bool get isDirty => _dirty.isNotEmpty;
+
+  /// Registers a field with the controller (for tracking validators and duplicate names).
+  void registerField(String name, {FutureOr<String?> Function(dynamic)? validator}) {
+    if (_registeredFields.contains(name)) {
+      debugPrint('Warning: Duplicate field name "$name" detected in SmartForm! Overwriting existing validator!');
+    } else {
+      _registeredFields.add(name);
+    }
+    if (validator != null) {
+      _validators[name] = validator;
+    }
+  }
+
+  /// Unregisters a field from the controller.
+  void unregisterField(String name) {
+    _registeredFields.remove(name);
+    _validators.remove(name);
+  }
 
   /// Sets the value for a specific field by its [name].
   void setValue(String name, dynamic value, {bool notify = true}) {
@@ -54,17 +75,36 @@ class SmartFormController extends ChangeNotifier {
     }
   }
 
-  /// Resets the form state, clearing all values, errors, and interaction flags.
+  /// Validates all registered fields and returns true if all are valid.
+  Future<bool> validate() async {
+    bool valid = true;
+    for (final name in _validators.keys) {
+      final validator = _validators[name];
+      if (validator != null) {
+        final error = await validator(_values[name]);
+        setError(name, error);
+        if (error != null) {
+          valid = false;
+        }
+      }
+    }
+    return valid;
+  }
+
+  /// Resets the form state, clearing all values, errors, interaction flags, and registered fields/validators.
   void reset() {
     _values.clear();
     _errors.clear();
     _dirty.clear();
     _touched.clear();
+    _registeredFields.clear();
+    _validators.clear();
     notifyListeners();
   }
 
   /// Manually triggers form submission via the controller.
-  void submit() {
+  Future<void> submit() async {
+    await validate();
     if (_onSubmitCallback != null) {
       _onSubmitCallback!();
     }
