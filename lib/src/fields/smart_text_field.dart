@@ -269,6 +269,45 @@ class _SmartTextFieldState extends State<SmartTextField> {
       return const SizedBox.shrink();
     }
 
+    Widget? buildSuffixWidget(Widget passwordToggle) {
+      if (widget.decoration?.suffixIcon != null) {
+        return widget.decoration?.suffixIcon;
+      }
+      if (passwordToggle is! SizedBox) {
+        return passwordToggle;
+      }
+      if (_isAsyncValidating) {
+        return const Padding(
+          padding: EdgeInsets.all(12),
+          child: SizedBox(
+            width: 16,
+            height: 16,
+            child: CircularProgressIndicator(strokeWidth: 2),
+          ),
+        );
+      }
+      return null;
+    }
+
+    Widget? buildCupertinoSuffixWidget(Widget passwordToggle) {
+      if (widget.decoration?.suffix != null) {
+        return widget.decoration?.suffix;
+      }
+      if (widget.decoration?.suffixIcon != null) {
+        return widget.decoration?.suffixIcon;
+      }
+      if (passwordToggle is! SizedBox) {
+        return passwordToggle;
+      }
+      if (_isAsyncValidating) {
+        return const Padding(
+          padding: EdgeInsets.all(8),
+          child: CupertinoActivityIndicator(radius: 8),
+        );
+      }
+      return null;
+    }
+
     Widget field;
     if (useCupertino) {
       final passwordToggle = buildPasswordToggle();
@@ -309,11 +348,7 @@ class _SmartTextFieldState extends State<SmartTextField> {
                             )
                           : null),
               suffix: widget.decoration?.suffix ??
-                      widget.decoration?.suffixIcon ?? 
-                      (passwordToggle is SizedBox ? 
-                        (_isAsyncValidating ? const Padding(padding: EdgeInsets.all(8), child: CupertinoActivityIndicator(radius: 8)) : null) 
-                        : passwordToggle) ?? 
-                      (_isAsyncValidating ? const Padding(padding: EdgeInsets.all(8), child: CupertinoActivityIndicator(radius: 8)) : null),
+                      buildCupertinoSuffixWidget(passwordToggle),
               padding: widget.decoration?.padding ?? const EdgeInsets.all(12),
               decoration: BoxDecoration(
                 color: widget.decoration?.fillColor ?? CupertinoColors.white,
@@ -348,11 +383,8 @@ class _SmartTextFieldState extends State<SmartTextField> {
               )
             : null,
         suffix: widget.decoration?.suffix,
-        suffixIcon: widget.decoration?.suffixIcon ?? 
-                     (passwordToggle is SizedBox ? 
-                       (_isAsyncValidating ? const Padding(padding: EdgeInsets.all(12), child: SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2)) : null) 
-                       : passwordToggle) ?? 
-                     (_isAsyncValidating ? const Padding(padding: EdgeInsets.all(12), child: SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2)) : null),
+        suffixIcon: widget.decoration?.suffixIcon ??
+            buildSuffixWidget(passwordToggle),
         errorText: _errorText,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(widget.decoration?.borderRadius ?? 4.0),
