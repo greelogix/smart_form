@@ -1,6 +1,6 @@
 name: smart_form_toolkit
 description: "An advanced, platform-aware Flutter form framework with unified state management, generic type support, and deep native parity."
-version: 0.0.2
+version: 0.0.3
 homepage: https://github.com/greelogix/smart_form
 repository: https://github.com/greelogix/smart_form.git
 issue_tracker: https://github.com/greelogix/smart_form/issues

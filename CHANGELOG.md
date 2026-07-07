@@ -1,3 +1,18 @@
+## 0.0.3
+
+* **Major: Enhanced `SmartFormBuilder` JSON schema support**:
+  - Added comprehensive decoration parsing from JSON (borderRadius, padding, fillColor, borderColor, borderWidth, shadows, labelStyle, hintStyle)
+  - Added icon parsing from JSON (prefixIcon and suffixIcon, supports string names or detailed map config with color/size)
+  - Added support for initial values via `value` field in JSON
+  - Added `enablePasswordToggle` option
+  - Added `minLines`/`maxLines` for multiline fields
+  - Added duplicate field name detection (warns and skips duplicates)
+  - Added `mounted` check in form submission to prevent errors
+  - Added validator support for `SmartChoiceField` in JSON
+  - Improved validation null safety
+  - Added BoxShadow, Offset, TextStyle, FontWeight, EdgeInsets, and Color parsers
+  - Added extensive icon name mapping (30+ common icons)
+
 ## 0.0.2
 
 * Enhanced documentation for `SmartFormBuilder`.
